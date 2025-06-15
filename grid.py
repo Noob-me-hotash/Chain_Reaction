@@ -34,7 +34,6 @@ class Cell:
     def burst(self):
         if self.orb_count >= self.critical_mass and self.orb_count > 0:
             burst_color = self.current_color
-            # orbs_to_distribute = self.orb_count
             
             self.orb_count = 0
             self.current_color = "null"
@@ -47,7 +46,6 @@ class Cell:
                 if neighbor_cell.orb_count >= neighbor_cell.critical_mass:
                     cells_to_burst.append(neighbor_cell)
             
-            # Handle chain reactions
             for cell in cells_to_burst:
                 cell.burst()
 

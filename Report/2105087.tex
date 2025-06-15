@@ -1,0 +1,102 @@
+\documentclass[a4paper, 13pt]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{multirow}
+
+\title{\textbf{\Large{Report on Chain Reaction Game}}}
+\author{\textbf{Zahid Al Hasan, 2105087}}
+\date{}
+
+\begin{document}	
+	\maketitle
+	\vspace{0.4cm}
+	\section*{Introduction}	
+	
+	I was told to build an instance of the game \textbf{"Chain Reaction"}, where I used \textbf{python} and its famous game library \textbf{pygame}. I have kept 3 playing modes:
+		\begin{itemize}
+			\item \textbf{Human vs Human}
+			\item \textbf{Human vs AI}
+			\item \textbf{AI vs AI}
+		\end{itemize}
+		
+	\vspace{0.5cm}
+	\section*{Experimental Setup}
+	
+	The first mode is very casual, it does not need any AI involvement. So no heuristics or minimax search algorithm were needed. For the	next two modes, I kept option for the following \textbf{5} heuristic evaluation functions:
+	\begin{enumerate}
+		\item \textbf{Orb difference heuristic} : 
+		Measures the number of red orbs and the number of blue orbs, and their difference is the heuristic value. Count of red orbs - count of blue orbs is the heuristic value for the red player, and the negative is the heuristic value for the blue player.
+		
+		\item \textbf{Territory heuristic} : 
+		Measures the current color of all the cells, where cell color means the color of the orbs the cell is holding. If no orb is held by a cell, I used the term "null" as the cell color; and such cells had no impact in this heuristic evaluation. Actual heuristic value is found in the same way as before.
+		
+		\item \textbf{Mobility heuristic} : 
+		This is even smarter. Finds the possible cells a particular colored orb can be kept in. Similar way was followed for finding the heuristic value.
+		
+		\item \textbf{Critical mass proximity heuristic} : 
+		A cell that had only one orb less than its critical mass was supposed to be a critical cell; and was a threat to the other colored cell as it was about to burst. A good heuristic in action.
+		
+		\item \textbf{A combined heuristic} : 
+		This is basically a weighted sum of the previous 4 heuristics.
+	\end{enumerate}
+	
+	And ultimately, a \textbf{Minimax Search Algorithm} that uses one of the heuristics to find the best possible next move for a player.\\
+	
+	 For testing purpose, I set the \textbf{time limit to 5 minutes},  made changes to the depth limits and the heuristics each time; and noted down the results. The results are shown in a table on the next section.
+	 
+	\vspace{0.5cm}
+	\section*{Results}
+		Below are the experimental data found from playing the game with different AI heuristics and different search depths:
+		\pagebreak
+		\begin{table}[!]
+			\centering
+			\caption{\textbf{Human vs AI}}
+			\vspace{0.2cm}
+			\small
+			\begin{tabular}{| c | c | c | c | c | c |}
+				\hline
+				\textbf{Heuristic} & \textbf{Search depth} & \textbf{Elapsed time} & \textbf{Winning player} & \textbf{Moves taken} & \textbf{Remarks}\\
+				\hline
+				Orb\_diff & 4 &  &  &  & \textbf{}\\
+				\hline
+				Mobility & 3 &  &  &  & \textbf{}\\
+				\hline
+				Territory & 4 &  &  &  &  \\
+				\hline
+				Combined & 2 &  &  &  & \textbf{}\\
+				\hline
+				Critical mass & 4 &  &  &  & \\
+				\hline
+			\end{tabular}
+		\end{table}
+		\vspace{0.4cm}
+		
+		\begin{table}[!]
+			\centering
+			\caption{\textbf{AI vs AI}}
+			\vspace{0.2cm}
+			\small
+			\begin{tabular}{| c | c | c | c | c | c | c | c |}
+        			\hline
+        			\multicolumn{2}{|c|}{\textbf{Heuristic}} & 
+        			\multicolumn{2}{c|}{\textbf{Search depth}} & 
+        			\multirow{2}{*}{\textbf{Elapsed time}} & 
+        			\multirow{2}{*}{\textbf{Winning Player}} & 
+        			\multirow{2}{*}{\textbf{Moves taken}} & 
+        			\multirow{2}{*}{\textbf{Remarks}} \\
+        			\cline{1-4}
+        			\textbf{Red AI} & \textbf{Blue AI} & \textbf{Red AI} 						& \textbf{Blue AI} & & & & \\
+        			\hline
+        			Orb\_diff & Critical & 4 & 3 & & & & \\
+        			\hline
+        			Combined & Mobility & 2 & 4 & & & & \\
+        			\hline
+        			Critical & Territory & 3 & 4 & & & & \\
+        			\hline
+    			\end{tabular}
+		\end{table}
+		
+	\vspace{0.5cm}
+	\section*{Discussion}
+	
+	
+\end{document}

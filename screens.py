@@ -99,26 +99,6 @@ def get_main_game_surf():
 
     draw_board(9, 6)
     
-    for i in range(9):
-        for j in range(6):
-            cell_center = (int(grid_x + cell_width*j + cell_width//2), int(grid_y + cell_height*i + cell_height//2))
-            
-            if ((i == 0 or i == 8) and (j == 0 or j == 5)):
-                critical_mass = 2
-            elif (i == 0 or i == 8 or j == 0 or j == 5):
-                critical_mass = 3
-            else:
-                critical_mass = 4
-            
-            try:
-                font = pygame.font.Font(None, 16)
-                mass_surf = font.render(str(critical_mass), True, GRAY)
-                mass_rect = mass_surf.get_rect()
-                mass_rect.topleft = (cell_center[0] - 60, cell_center[1] - 40)
-                displaysurf.blit(mass_surf, mass_rect)
-            except:
-                pass
-
     return displaysurf
 
 
@@ -128,26 +108,6 @@ def get_ai_vs_ai_game_surf():
     
     draw_board(9, 6)
     
-    for i in range(9):
-        for j in range(6):
-            cell_center = (int(grid_x + cell_width*j + cell_width//2), int(grid_y + cell_height*i + cell_height//2))
-            
-            if ((i == 0 or i == 8) and (j == 0 or j == 5)):
-                critical_mass = 2
-            elif (i == 0 or i == 8 or j == 0 or j == 5):
-                critical_mass = 3
-            else:
-                critical_mass = 4
-            
-            try:
-                font = pygame.font.Font(None, 16)
-                mass_surf = font.render(str(critical_mass), True, GRAY)
-                mass_rect = mass_surf.get_rect()
-                mass_rect.topleft = (cell_center[0] - 60, cell_center[1] - 40)
-                displaysurf.blit(mass_surf, mass_rect)
-            except:
-                pass
-
     return displaysurf
 
 

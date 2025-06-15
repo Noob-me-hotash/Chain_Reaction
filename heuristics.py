@@ -27,14 +27,14 @@ def get_cell_counts(state: 'Board'):
     return red_cells, blue_cells
 
 
-def piece_diff_heuristic(state: 'Board'):
+def orb_diff_heuristic(state: 'Board'):
     red_count, blue_count = get_orb_counts(state)
-    return red_count - blue_count
+    return (red_count - blue_count) if current_player.color == "red" else (blue_count - red_count)
 
 
 def territory_heuristic(state: 'Board'):
     red_cells, blue_cells = get_cell_counts(state)
-    return red_cells - blue_cells
+    return (red_cells - blue_cells) if current_player.color == "red" else (blue_cells - red_cells)
 
 
 def mobility_heuristic(state: 'Board'):
@@ -52,17 +52,35 @@ def mobility_heuristic(state: 'Board'):
                 red_mobility += 1
                 blue_mobility += 1
     
-    return red_mobility - blue_mobility
+    return (red_mobility - blue_mobility) if current_player.color == "red" else (blue_mobility - red_mobility) 
 
 
-def combined_heuristic(state: 'Board', player: 'Player'):
-    piece_score = piece_diff_heuristic(state)
+
+def critical_mass_proximity_heuristic(state: 'Board'):
+    critical_asset_red = 0
+    critical_asset_blue = 0
+
+    for i in range(state.row_count):
+        for j in range(state.col_count):
+            curr_cell = state.grid[i][j]
+            if curr_cell.orb_count == curr_cell.critical_mass - 1:
+                if curr_cell.current_color == "red":
+                    critical_asset_red += 1
+                elif curr_cell.current_color == "blue":
+                    critical_asset_blue += 1
+    
+    return (critical_asset_red - critical_asset_blue) if current_player.color == "red" else (critical_asset_blue - critical_asset_red)
+
+
+def combined_heuristic(state: 'Board'):
+    piece_score = orb_diff_heuristic(state)
     territory_score = territory_heuristic(state)
     mobility_score = mobility_heuristic(state)
+    critical_prox_score = critical_mass_proximity_heuristic(state)
     
-    total_score = (piece_score * 0.4 + territory_score * 0.4 + mobility_score * 0.2)
+    total_score = (piece_score * 0.2 + territory_score * 0.3 + mobility_score * 0.2 + critical_prox_score * 0.3)
     
-    return total_score if player.color == "red" else -total_score
+    return total_score if current_player.color == "red" else -total_score
 
 
 def is_winning_state(board: 'Board'):
@@ -88,7 +106,7 @@ def get_possible_moves(player: 'Player', state: 'Board'):
     return moves
 
 
-def minimax_search(state: 'Board', depth_limit, is_maximizing: bool, max_player: 'Player', min_player: 'Player', alpha=float('-inf'), beta=float('inf')):
+def minimax_search(state: 'Board', heuristic, depth_limit, is_maximizing: bool, max_player: 'Player', min_player: 'Player', alpha=float('-inf'), beta=float('inf')):
     win_happened, won_player = is_winning_state(state)
     if win_happened:
         if won_player == max_player:
@@ -97,13 +115,13 @@ def minimax_search(state: 'Board', depth_limit, is_maximizing: bool, max_player:
             return -1000 - depth_limit, None  
     
     if depth_limit == 0:
-        return combined_heuristic(state, max_player), None
+        return heuristic(state), None
     
     current_player = max_player if is_maximizing else min_player
     possible_moves = get_possible_moves(current_player, state)
     
     if not possible_moves:
-        return combined_heuristic(state, max_player), None
+        return heuristic(state), None
     
     best_move = possible_moves[0]
     
@@ -113,7 +131,7 @@ def minimax_search(state: 'Board', depth_limit, is_maximizing: bool, max_player:
             next_state = state.make_copy()
             next_state.make_move(move[0], move[1], current_player)
             
-            eval_score, _ = minimax_search(next_state, depth_limit - 1, False, max_player, min_player, alpha, beta)
+            eval_score, _ = minimax_search(next_state, heuristic, depth_limit - 1, False, max_player, min_player, alpha, beta)
             
             if eval_score > max_eval:
                 max_eval = eval_score
@@ -131,7 +149,7 @@ def minimax_search(state: 'Board', depth_limit, is_maximizing: bool, max_player:
             next_state = state.make_copy()
             next_state.make_move(move[0], move[1], current_player)
             
-            eval_score, _ = minimax_search(next_state, depth_limit - 1, True, max_player, min_player, alpha, beta)
+            eval_score, _ = minimax_search(next_state, heuristic, depth_limit - 1, True, max_player, min_player, alpha, beta)
             
             if eval_score < min_eval:
                 min_eval = eval_score
@@ -142,3 +160,12 @@ def minimax_search(state: 'Board', depth_limit, is_maximizing: bool, max_player:
                 break 
         
         return min_eval, best_move
+    
+
+# test_state = read_state("gamestate.txt")
+# print(test_state)
+# print(f"Orb diff heuristic value = {orb_diff_heuristic(test_state)}\n")
+# print(f"Mobility heuristic value = {mobility_heuristic(test_state)}\n")
+# print(f"Territory heuristic value = {territory_heuristic(test_state)}\n")
+# print(f"Piece diff heuristic value = {piece_diff_heuristic(test_state)}\n")
+# print(f"Piece diff heuristic value = {piece_diff_heuristic(test_state)}\n")

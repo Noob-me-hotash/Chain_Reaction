@@ -1,7 +1,7 @@
 from colorama import Fore, Style, init
 import pygame
 from pygame.locals import *
-from grid import Cell, Player
+from grid import Cell, Player, Board
 init()
 
 ###################################################################################################################
@@ -19,6 +19,10 @@ init()
 ##########################################  Constants  ##########################################
 
 global_move_count = 0
+ai_thinking = False
+
+last_ai_move_time = 0  
+ai_move_interval = 800  
 
 BLACK = pygame.Color(0, 0, 0)
 WHITE = pygame.Color(255, 255, 255)
@@ -42,9 +46,7 @@ displaysurf.fill(BLACK)
 player0 = Player("Human", "red")
 player1 = Player("AI", "blue")
 
-extra_human_player = Player("Another human", "blue")
-extra_AI_player = Player("Another AI", "red")
-
+current_player = player0
 winning_player = None
 
 ###################################################################################################################
@@ -105,7 +107,7 @@ def read_state(filename):
                     cell_row.append(cell)
                 grid.append(cell_row)
         
-        # Set up adjacencies
+
         for i in range(9):
             for j in range(6):
                 cell = grid[i][j]
@@ -114,8 +116,8 @@ def read_state(filename):
                     ni, nj = i+di, j+dj
                     if 0 <= ni < 9 and 0 <= nj < 6:
                         cell.adjacent_cells.add(grid[ni][nj])
-        print("Reading complete!")
-        return grid
+        # print("Reading complete!")
+        return Board(9, 6, grid, global_move_count)
     except FileNotFoundError:
         print(f"File {filename} not found")
         return None
@@ -127,9 +129,9 @@ def read_state(filename):
 def write_state(filename, player: 'Player', state):
     try:
         with open(filename, "w") as file:
-            file.write(str(player) + f" Move number ({state.move_count}): \n")
+            file.write(str(player) + f" Move : \n")
             file.write(str(state))
-        print("Writing complete!")
+        # print("Writing complete!")
     except Exception as e:
         print(f"Error writing file: {e}")
 
