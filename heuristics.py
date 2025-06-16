@@ -160,12 +160,3 @@ def minimax_search(state: 'Board', heuristic, depth_limit, is_maximizing: bool, 
                 break 
         
         return min_eval, best_move
-    
-
-# test_state = read_state("gamestate.txt")
-# print(test_state)
-# print(f"Orb diff heuristic value = {orb_diff_heuristic(test_state)}\n")
-# print(f"Mobility heuristic value = {mobility_heuristic(test_state)}\n")
-# print(f"Territory heuristic value = {territory_heuristic(test_state)}\n")
-# print(f"Piece diff heuristic value = {piece_diff_heuristic(test_state)}\n")
-# print(f"Piece diff heuristic value = {piece_diff_heuristic(test_state)}\n")

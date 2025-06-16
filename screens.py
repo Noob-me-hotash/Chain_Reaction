@@ -8,11 +8,7 @@ fpsClock = pygame.time.Clock()
 
 start_screen = 'start'
 game_screen = 'game'
-credits_screen = 'credits'
 game_over_screen = 'game_over'
-restart_screen = 'restart'
-quit_to_menu_screen = 'quit_to_menu'
-win_screen = 'win'
 ai_vs_ai_game_screen = "ai_vs_ai"
 
 displaysurf = pygame.display.set_mode((1200, 800))
