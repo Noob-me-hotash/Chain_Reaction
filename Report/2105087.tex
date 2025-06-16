@@ -2,6 +2,7 @@
 \usepackage[margin=2cm]{geometry}
 \usepackage{multirow}
 
+
 \title{\textbf{\Large{Report on Chain Reaction Game}}}
 \author{\textbf{Zahid Al Hasan, 2105087}}
 \date{}
@@ -41,7 +42,7 @@
 	
 	And ultimately, a \textbf{Minimax Search Algorithm} that uses one of the heuristics to find the best possible next move for a player.\\
 	
-	 For testing purpose, I set the \textbf{time limit to 5 minutes},  made changes to the depth limits and the heuristics each time; and noted down the results. The results are shown in a table on the next section.
+	 For testing purpose, I set the \textbf{time limit to 6 minutes}, set the \textbf{starting player as the red player}, made changes to the depth limits and the heuristics each time; and noted down the results. The results are shown in a table on the next section.
 	 
 	\vspace{0.5cm}
 	\section*{Results}
@@ -54,21 +55,32 @@
 			\small
 			\begin{tabular}{| c | c | c | c | c | c |}
 				\hline
-				\textbf{Heuristic} & \textbf{Search depth} & \textbf{Elapsed time} & \textbf{Winning player} & \textbf{Moves taken} & \textbf{Remarks}\\
+				\textbf{Heuristic} & \textbf{Search depth} & \textbf{Elapsed time} & \textbf{Winner} & \textbf{Moves} & \textbf{Remarks}\\
 				\hline
-				Orb\_diff & 4 &  &  &  & \textbf{}\\
+				Orb\_diff & 4 & 315s & AI & 62 & sneaky, clever\\
 				\hline
-				Mobility & 3 &  &  &  & \textbf{}\\
+				Mobility & 3 & 360s  & none & 74 & sneaky \textbf{}\\
 				\hline
-				Territory & 4 &  &  &  &  \\
+				Territory & 3 & 360s & none & 82 & sneaky \\
 				\hline
-				Combined & 2 &  &  &  & \textbf{}\\
+				Combined & 2 & 360s & none & 82 & little aggressive \textbf{}\\
 				\hline
-				Critical mass & 4 &  &  &  & \\
+				Critical & 3 & 274s & AI & 62 & unpredictable playing \\
+				\hline
+				Territory & 2 & 360s & none & 61 & dind't play that well  \\
+				\hline
+				Mobility & 2 & 360s & none & 76 & started well but game not impressive  \\
+				\hline
+				Orb\_diff & 3 & 166s & AI & 62 & quite aggressive and clever playing\\
+				\hline
+				Critical & 4 & 234s & AI & 42 & unimpressive start, good playing overall\\
+				\hline
+				Combined & 3 & 360s & none & 94 & sneaky \\
 				\hline
 			\end{tabular}
 		\end{table}
-		\vspace{0.4cm}
+		
+		\vspace{0.3cm}
 		
 		\begin{table}[!]
 			\centering
@@ -80,17 +92,27 @@
         			\multicolumn{2}{|c|}{\textbf{Heuristic}} & 
         			\multicolumn{2}{c|}{\textbf{Search depth}} & 
         			\multirow{2}{*}{\textbf{Elapsed time}} & 
-        			\multirow{2}{*}{\textbf{Winning Player}} & 
-        			\multirow{2}{*}{\textbf{Moves taken}} & 
+        			\multirow{2}{*}{\textbf{Winner}} & 
+        			\multirow{2}{*}{\textbf{Moves}} & 
         			\multirow{2}{*}{\textbf{Remarks}} \\
         			\cline{1-4}
         			\textbf{Red AI} & \textbf{Blue AI} & \textbf{Red AI} 						& \textbf{Blue AI} & & & & \\
         			\hline
-        			Orb\_diff & Critical & 4 & 3 & & & & \\
+        			Orb\_diff & Critical & 3 & 3 & 303s & Red AI & 113 & red too aggressive, blue clever\\
         			\hline
-        			Combined & Mobility & 2 & 4 & & & & \\
+        			Combined & Mobility & 2 & 3 & 360s & none &  & both followed patterns, red dominated \\
         			\hline
-        			Critical & Territory & 3 & 4 & & & & \\
+        			Critical & Territory & 3 & 4 & 360s & none & 94 & red dominated awesomely\\
+        			\hline
+        			Mobility & Combined & 3 & 3 & 360s & none & 102 & red dominated powerfully, about to win \\
+        			\hline
+        			Territory & Combined & 3 & 4 & 360s & none & 89 & red dominated \\
+        			\hline
+        			Combined & Critical & 2 & 3 & - & - & - & red dominated \\
+        			\hline
+        			Orb\_diff & Territory & 3 & 2 & 309s & Red AI & 121 & red dominated all over the game \\
+        			\hline
+        			Mobility & Orb\_diff & 2 & 2 & - & - & - & blue dominated first, red made comeback \\
         			\hline
     			\end{tabular}
 		\end{table}
@@ -98,5 +120,11 @@
 	\vspace{0.5cm}
 	\section*{Discussion}
 	
+	First of all, I did not try all the possible permutations for testing and so, cannot have a fully concrete comment on the performances of different heuristics. What I can only have is some idea about how they can possibly act.
 	
+	An important observation from the Table-2 is that the starting player puts the red orb at the very beginning; and in all the cases, red dominates. I tried swapping the starting player and it was the blue player that dominated then. The reason is - the first player gives the best possible move and opponent can't surpass that move in order to reverse-dominate it with the help of any heuristic.
+	
+	However, Based on the tables, some important characteristics are observed like - following patterns, dominating, playing aggressive etc. Following a particular pattern can be assumed to be a drawback for an AI agent in this case, because this implies that the agent is not willing to tackle any new scenario; rather it keeps doing something monotonously. Playing aggressively means that each time an AI agent fills a cell as much as it can and does nullify opponent neighbor cells - resulting in an almost-full board with only one-colored cell of the aggressive agent. And, unexpected performance implies that the AI places orbs at cells humans can barely guess, and one such single move can turn the game around at a certain state unexpectedly.
+	
+	Finally, in a nutshell, we notice from the experiment that \textbf{AI agents performed well when the orb difference heuristic and the critical mass proximity heuristic was integrated}; while playing human vs AI, in all these cases the AI won amazingly. Similar observation goes for AI vs AI, but then the first move played even more vital role. The \textbf{territory  heuristic couldn't show impressive performance, whereas the rest two heuristics were somewhat average.}
 \end{document}

@@ -5,6 +5,8 @@ from grid import *
 from essentials import *
 from heuristics import *
 
+sys.setrecursionlimit(8000)
+
 pygame.init()
 
 FPS = 100
@@ -14,7 +16,7 @@ start_time = 0
 end_time = 0
 elapsed_time = 0
 
-time_limit = 300 # 5 minutes
+time_limit = 360 # 6 minutes
 
 displaysurf = pygame.display.set_mode((1200, 800))
 displaysurf.fill(screens.BLACK)
@@ -58,7 +60,7 @@ def make_ai_move():
         ai_thinking = True
         pygame.display.update()
 
-        _, best_move = minimax_search(board, critical_mass_proximity_heuristic, 3, True, player1, player0)
+        _, best_move = minimax_search(board, combined_heuristic, 3, True, player1, player0)
         
         if best_move:
             board.make_move(best_move[0], best_move[1], current_player)
@@ -75,9 +77,9 @@ def make_ai_move_auto():
     pygame.display.update()
     
     if current_player == player1:
-        _, best_move = minimax_search(board, critical_mass_proximity_heuristic, 2, True, player1, player0)
+        _, best_move = minimax_search(board, critical_mass_proximity_heuristic, 3, True, player1, player0)
     else:
-        _, best_move = minimax_search(board, combined_heuristic, 3, True, player0, player1)
+        _, best_move = minimax_search(board, combined_heuristic, 2, True, player0, player1)
         
     if best_move:
         board.make_move(best_move[0], best_move[1], current_player)
@@ -156,18 +158,10 @@ while True:
     elif current_screen == screens.game_screen:
         screens.get_main_game_surf()
 
-        remaining_time = max(0, int(time_limit - elapsed_time))
-        minutes = remaining_time // 60
-        seconds = remaining_time % 60
-
         curr_color = RED if current_player == player0 else BLUE
         player_text = f"{current_player} move : "
         if ai_thinking:
             player_text = "AI thinking..."
-
-        timerTextSurf = pygame.font.Font('game_utils/font/Arbutus-Regular.ttf', 20).render(f"Time remaining : {minutes} minute(s) {seconds} second(s)...", True, YELLOW)
-        timerTextRect = timerTextSurf.get_rect(center=(600, 25))
-        displaysurf.blit(timerTextSurf, timerTextRect) 
         
         playerMoveSurf = pygame.font.Font('game_utils/font/LuckiestGuy-Regular.ttf', 32).render(player_text, True, curr_color)
         playerMoveRect = playerMoveSurf.get_rect(center=(600, 75))
@@ -185,6 +179,14 @@ while True:
             elapsed_time = currently_passed_time
             winning_player = None
             current_screen = screens.game_over_screen
+
+        remaining_time = max(0, int(time_limit - currently_passed_time))
+        minutes = remaining_time // 60
+        seconds = remaining_time % 60
+
+        timerTextSurf = pygame.font.Font('game_utils/font/Arbutus-Regular.ttf', 20).render(f"Time remaining : {minutes} minute(s) {seconds} second(s)...", True, YELLOW)
+        timerTextRect = timerTextSurf.get_rect(center=(600, 25))
+        displaysurf.blit(timerTextSurf, timerTextRect) 
 
         win_status = is_winning_state(board)
         if win_status[0]:
